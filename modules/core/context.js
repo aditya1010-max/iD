@@ -20,6 +20,10 @@ import { presetManager } from '../presets';
 import { rendererBackground, rendererFeatures, rendererMap, rendererPhotos } from '../renderer';
 import { services } from '../services';
 import { uiInit } from '../ui/init';
+
+// [1] IMPORT KBAR
+import { kbar } from '../ui/kbar';
+
 import { utilKeybinding, utilRebind, utilStringQs, utilCleanOsmString } from '../util';
 
 
@@ -78,7 +82,13 @@ export function coreContext() {
 
   /* User interface and keybinding */
   let _ui;
+  let _kbar; // [2] DEFINE VARIABLE
+
   context.ui = () => _ui;
+
+  // [3] EXPOSE ACCESSOR
+  context.kbar = () => _kbar;
+
   context.lastPointerType = () => _ui.lastPointerType();
 
   let _keybinding = utilKeybinding('context');
@@ -544,6 +554,10 @@ export function coreContext() {
       _photos = rendererPhotos(context);
 
       _ui = uiInit(context);
+
+      // [4] INSTANTIATE KBAR
+      // This instantiates the orchestrator and registers the keydown listener
+      _kbar = kbar(context);
     }
 
     // Set up objects that might need to access properties of `context`. The order
