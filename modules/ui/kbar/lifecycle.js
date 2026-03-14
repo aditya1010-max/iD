@@ -1,42 +1,5 @@
 // this file would contain the code for OPEN / CLOSE / CLEANUP of kbar
 
-
-// import { uninstallEvents } from './events';
-
-// export function createCloser({ overlay, context }) {
-//   return function close() {
-//     overlay.remove();
-//     uninstallEvents();
-//     context.surface().node().focus();
-//   };
-// }
-
-
-
-//this file is more robust with a closed flag and an optional onClose callback
-
-// import { uninstallEvents } from './events';
-
-// export function createCloser({ overlay, context, onClose }) {
-//   let closed = false;
-
-//   return function close(reason) {
-//     if (closed) return;
-//     closed = true;
-
-//     overlay.remove();
-//     uninstallEvents();
-//     context.surface().node().focus();
-
-//     if (onClose) onClose(reason);
-//   };
-// }
-
-
-//v3
-
-// modules/ui/kbar/lifecycle.js
-
 export function createCloser({ overlay, context, onClose }) {
   return function close(reason) {
     // Hide instead of destroy

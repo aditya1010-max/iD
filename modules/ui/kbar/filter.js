@@ -1,18 +1,3 @@
-// this file would contain code for search logic
-
-
-// export function filterActions(actions, query) {
-//   const q = query.toLowerCase();
-//   return actions.filter(action =>
-//     action.title.toLowerCase().includes(q)
-//   );
-// }
-
-
-//v2
-
-
-
 export function filterActions(actions, query) {
     if (!query) return actions;
 
