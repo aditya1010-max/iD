@@ -1,8 +1,8 @@
 import { dispatch as d3_dispatch } from 'd3-dispatch';
 import { select as d3_select } from 'd3-selection';
 import { utilGetSetValue, utilRebind, utilTriggerEvent } from '../util';
-
-
+import { uiTooltip } from './tooltip';
+import { svgIcon } from '../svg/icon';
 // This code assumes that the combobox values will not have duplicate entries.
 // It is keyed on the `value` of the entry. Data should be an array of objects like:
 //   [{
@@ -393,20 +393,62 @@ export function uiCombobox(context, klass) {
                 })
                 .attr('title', function(d) { return d.title; });
 
-            enter.each(function(d) {
-                    const sel = d3_select(this);
-                    const labelSpan = sel.append('span')
-                        .attr('class', 'combobox-option-label');
-                    if (d.display) {
-                        d.display(labelSpan);
-                    } else {
-                        labelSpan.text(d.value);
-                    }
-                    if (d.description) {
-                        sel.append('span')
-                            .attr('class', 'combobox-option-description')
-                            .text(d.description);
-                    }
+                enter.each(function(d) {
+                const sel = d3_select(this);
+
+                const row = sel.append('div')
+                    .attr('class', 'combobox-option-row');
+
+                const label = row.append('span')
+                    .attr('class', 'combobox-option-label');
+
+                if (d.display) {
+                    d.display(label);
+                } else {
+                    label.text(d.value);
+                }
+
+                if (d.description) {
+                    const info = row.append('span')
+                    .attr('class', 'combobox-option-info')
+                    .call(svgIcon('#iD-icon-inspect'));
+
+                    const tooltip = uiTooltip(context)
+                    .title(d.description)
+                    .placement('left');
+
+                    // below is code that will be useful for users on mobile phone users
+                    let timeout;
+
+                    info
+                    .on('touchstart mousedown', function(event) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        if (timeout) clearTimeout(timeout);
+
+                        timeout = setTimeout(() => {
+                            window.requestAnimationFrame(() => {
+                                tooltip.show(this);
+                                if (tooltip.update) tooltip.update();
+                            });
+                        }, 200);
+                    })
+
+                    .on('touchend mouseup mouseleave touchcancel', function(event) {
+                        event.stopPropagation();
+                        event.preventDefault();
+
+                        clearTimeout(timeout);
+                        tooltip.hide();
+                    })
+
+                    .on('click', function(event) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    });
+
+                    info.call(tooltip);
+                }
                 });
 
             enter

@@ -6122,3 +6122,68 @@ textarea:focus:dir(rtl)::-webkit-resizer {
     width: 100px;
     color: var(--link-color);
 }
+
+.combobox {
+  scrollbar-gutter: stable;  /*helped remove the jitter due to "i" and scrollbar overlap along with requesAnimatinFrame used to wrap tooltip.show */
+}
+
+.combobox-option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.combobox-option-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.combobox-option-info {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #41464b;
+  position: relative;
+  left: 7px;
+
+  cursor: pointer;
+
+  /* 🔥 smooth animation */
+  transition: 
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.combobox-option-info:hover {
+  border-color: #ffffff;
+  background-color: #258292;
+
+  /* optional nice effect */
+  transform: scale(1.05);
+}
+
+
+.tooltip { 
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+
+.tooltip {   /*for users with pc, laptop with big screen*/
+  max-width: min(260px, 80vw);
+  white-space: normal;
+}
+
+@media (max-width: 480px) { /*for mobile users with small screen */
+  .tooltip {
+    max-width: 135px;   /*adjusted perfectly so that the tooltip info dosent overflow*/
+  }
+}
+
