@@ -34,7 +34,25 @@ export function actionChangePreset(entityID, oldPreset, newPreset, skipFieldDefa
 
                 // field-keys used by the old preset but not the new preset
                 const fieldKeysToRemove = utilArrayDifference(oldPresetFieldKeys, preserveKeys);
-                tags = utilObjectOmit(tags, fieldKeysToRemove);
+                let expandedKeysToRemove = new Set(fieldKeysToRemove);
+
+                // Loop over all existing tags
+                for (const k in tags) {
+                    for (const baseKey of fieldKeysToRemove) {
+
+                        // Handle localized fields (name:*)
+                        if (k.startsWith(baseKey + ':')) {
+                        expandedKeysToRemove.add(k);
+                        }
+
+                        // Handle prefix-based fields (multiCombo)
+                        if (k.startsWith(baseKey + ':')) {
+                        expandedKeysToRemove.add(k);
+                        }
+                    }
+                }
+
+                tags = utilObjectOmit(tags, Array.from(expandedKeysToRemove));
             }
         }
         if (oldPreset) tags = oldPreset.unsetTags(tags, geometry, preserveKeys, false, loc);
